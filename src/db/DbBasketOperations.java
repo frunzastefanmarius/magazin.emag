@@ -16,10 +16,7 @@ public class DbBasketOperations {
 
         // COD CARE SCRIE IN DB
 
-
-
         // daca are rezultate, citirea lor
-
 
         // conectare la db cu incarcare driver
         final String URLDB = "jdbc:postgresql://localhost:5432/emag";

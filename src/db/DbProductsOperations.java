@@ -15,10 +15,7 @@ public class DbProductsOperations {
 
         // COD CARE SCRIE IN DB
 
-
-
         // daca are rezultate, citirea lor
-
 
         // conectare la db cu incarcare driver
         final String URLDB = "jdbc:postgresql://localhost:5432/emag";
@@ -29,7 +26,7 @@ public class DbProductsOperations {
             Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
 
             // rulare sql
-            PreparedStatement pSt = conn.prepareStatement("insert into products(name, description, price, iduser, idcategory) values(?, ?, ?,?,?)");
+            PreparedStatement pSt = conn.prepareStatement("insert into products(name, description, price, iduser, idcategory) values (?, ?, ?,?,?)");
             pSt.setString(1, p.getName());
             pSt.setString(2, p.getDescription());
             pSt.setDouble(3, p.getPrice());

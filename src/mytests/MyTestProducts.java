@@ -12,18 +12,18 @@ public class MyTestProducts {
 
     public static void main(String[] args) {
 
-    new MyTestProducts().testSelect();
+    new MyTestProducts().testInsert();
 
     }
 
     private void testInsert () {
 
 
-        Product p1= new Product("laptop dell", "laptop dell cu procesor de ala s memorie tot de aia si toate alea sa te prosteasca ", 4500, 14,1 );
-        Product p2= new Product("laptop apple", "laptop apple m3 cu alea bune  ", 14500, 14,1 );
+        Product p1= new Product("laptop dell", "laptop dell cu procesor de ala s memorie tot de aia si toate alea sa te prosteasca ", 4500, 1,1 );
+        Product p2= new Product("laptop apple", "laptop apple m3 cu alea bune  ", 14500, 4,1 );
 
-        Product p3= new Product("salam pikok", "ala polonez ", 25, 15,1 );
-        Product p4= new Product("apa borsec", "apa de aia cu aia  ", 3.99, 15,1 );
+        Product p3= new Product("salam pikok", "ala polonez ", 25, 2,1 );
+        Product p4= new Product("apa borsec", "apa de aia cu aia  ", 3.99, 3,1 );
 
 
         DbProductsOperations dbProductsOperations = new DbProductsOperations();
@@ -41,9 +41,6 @@ public class MyTestProducts {
         for(ProductDisplay p: lp) {
             System.out.println(p);
         }
-
-
-
 
     }
 }
