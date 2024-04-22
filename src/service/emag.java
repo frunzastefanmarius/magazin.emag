@@ -17,86 +17,119 @@ public class emag {
 
     //aici fac metoda de inregistrare cu void
 
-    public static void start(){
+    Long idUser = -1L;//daca nu iese asa trimit parametrul idUser prin metoda
+    //nu a iesit asa pentru ca am metode statice
+
+    public static void start() {
 
         Scanner scanner = new Scanner(System.in);
-        int choice;
+        String input = null;
+
         do {
             System.out.println("Alegeti una din urmatoarele actiuni");
             System.out.println("1. Inregistrare");
             System.out.println("2. Logare");
             System.out.println("-------------------");
 
-            choice = scanner.nextInt();
+            try {
+                input = scanner.nextLine();
+                int choice = Integer.parseInt(input);
 
-            switch (choice) {
-                case 1:
-                    register();
-                    start();
-                    break;
-                case 2:
-                    login();
-                default:
-                    System.out.println("nu ai ales o optiune valida.");
-                    start();
+                switch (choice) {
+                    case 1:
+                        register();
+                        start();
+                    case 2:
+                        login();
+                        start();
+                    default:
+                        System.out.println("Nu ai ales o optiune valida.");
+                        start();
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Te rugam sa alegi una din optiunile disponibile");
+                start();
             }
-        } while (choice != 0);
+        } while (input.equals(0));
     }
-    public static void register(){
+
+    public static void register() {
         boolean existentUser = false;
+        System.out.println("Bine ai venit! Hai sa ne inregistram");
+
         do {
             existentUser = false;
-            System.out.println("Salut , hai sa ne inregistram ");
+            String usernameIntrodus;
+            String pwdIntrodus;
+            String username=null;
+            String pwd=null;
+            System.out.println("Te rugam sa introduci un username si o parola: ");
             Scanner sc = new Scanner(System.in);
-            System.out.print("New User:");
-            String username = sc.nextLine();
+            System.out.print("New Username:");
+            usernameIntrodus = sc.nextLine();
             System.out.print("Pwd:");
-            String pwd = sc.nextLine();
+            pwdIntrodus = sc.nextLine();
+
+            if(usernameIntrodus.matches("[a-zA-Z]+")){
+                username=usernameIntrodus;
+            }else {
+                System.out.println("Username poate contine doar litere mari, litere mici si nu pot exista spatii. Te rugam sa incerci din nou");
+                start();
+            }
+            if (pwdIntrodus.length()<8 && pwdIntrodus.contains(" ")){
+                System.out.println("Parola trebuie sa fie mai lunga de 8 caractere si sa nu contina spatii.");
+                start();
+            }else {
+                pwdIntrodus=pwd;
+            }
             User u = new User(username, pwd);
 
             DbUsersOperations db = new DbUsersOperations();
             try {
                 db.insert(u);
+                System.out.println("Felicitari! Te-ai inregistrat cu succes, "+ username + "!");
             } catch (SQLException e) {
-                existentUser=true;
-                System.out.println("nu se poate cu acest user deoarece este luat, reincearca");
+                existentUser = true;
+                System.out.println("Ne pare rau dar username " + username + " nu este disponibil. Te rugam sa incerci altul.");
             }
         }
         while (existentUser);
     }
 
-    public static Long login(){
+    public static Long login() {
         boolean loginSuccessfull = false;
         Long idUser = null;
         int attempts = 0;
         int maxAttempts = 3;
+        String username;
         do {
             Scanner sc = new Scanner(System.in);
             System.out.print("Login User:");
-            String username = sc.nextLine();
+            username = sc.nextLine();
             System.out.print("Pwd:");
             String pwd = sc.nextLine();
             User u = new User(username, pwd);
             UserManagementService ums = new UserManagementService();
             idUser = ums.login(u);
+
             attempts++;
+            System.out.println("Mai aveti " + (maxAttempts-attempts) + " incercari.");
         }
-        while (idUser == null && attempts<maxAttempts);
+        while (idUser == null && attempts < maxAttempts);
 
-        if (idUser==null){
-            System.out.println("ne pare rau. nu am gasit un cont cu acest user si aceasta parola.");
-
-        }else {
+        if (idUser == null) {
+            System.out.println("Ati atins numarul maxim de incercari.");
+        } else {
             loginSuccessfull = true;
-            System.out.println("salut usere cu id:" + idUser);
+            System.out.println("Salut " + username + "! Bine ai venit!");
         }
-        if (loginSuccessfull){
-            showMenuOptions();
+        if (loginSuccessfull) {
+            showMenuOptions(idUser);
         }
         return idUser;
     }
 
-    public static void showMenuOptions(){
+    public static void showMenuOptions(Long idUser) {
         Scanner scanner = new Scanner(System.in);
         int userMenuOption;
 
@@ -112,20 +145,29 @@ public class emag {
             userMenuOption = scanner.nextInt();
             DbBasketOperations dbb = new DbBasketOperations();
 
-
             switch (userMenuOption) {
-                case 1: readAllProducts();
-                //case 2: addProductsInBasket();
-                //case 3: displayBasket();
-                //case 4: deleteProductFromBasket();
-                case 0: endProgram();
-                default: System.out.println("Invalid choice. Please enter a valid option.");
+                case 1:
+                    readAllProducts();
+                    showMenuOptions(idUser);
+                case 2:
+                    addProductsInBasket(idUser);
+                    showMenuOptions(idUser);
+                case 3:
+                    displayBasket(idUser);
+                    showMenuOptions(idUser);
+                case 4:
+                    deleteProductFromBasket(idUser);
+                    showMenuOptions(idUser);
+                case 0:
+                    endProgram();
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
             }
         } while (userMenuOption != 0);
         start();
     }
 
-    public static void readAllProducts(){
+    public static void readAllProducts() {
         System.out.println("Aceasta este lista de produse");
         // list products
         DbProductsOperations db = new DbProductsOperations();
@@ -134,10 +176,9 @@ public class emag {
         for (ProductDisplay p : lp) {
             System.out.println(p);
         }
-        showMenuOptions();
     }
 
-    public static void addProductsInBasket(Long idUser){
+    public static void addProductsInBasket(Long idUser) {//aici ii tirmit matodei idUser ca sa stie in ce cos sa puna produsul
         System.out.println("Adauga produse in cos:");
         // simulam add in cos a produselor
         Scanner sc = new Scanner(System.in);
@@ -153,9 +194,9 @@ public class emag {
         idprod = sc.nextLong();
         b = new Basket(idUser, idprod);
         dbBasketOperations.insert(b);
-        showMenuOptions();
     }
-    public static void displayBasket(Long idUser){
+
+    public static void displayBasket(Long idUser) {
         // afisez cosului userului logat
         DbBasketOperations dbb = new DbBasketOperations();
         List<BasketDisplay> lb = dbb.readBasketOfAUser(idUser);
@@ -167,9 +208,9 @@ public class emag {
         for (BasketDisplay bask : lb) {
             System.out.println(bask);
         }
-        showMenuOptions();
     }
-    public static void deleteProductFromBasket(Long idUser){
+
+    public static void deleteProductFromBasket(Long idUser) {
 
         // sterg din cos
 
@@ -184,9 +225,9 @@ public class emag {
         for (BasketDisplay bask : lb) {
             System.out.println(bask);
         }
-        showMenuOptions();
     }
-    public static void endProgram(){
+
+    public static void endProgram() {
         System.out.println("==========");
         System.out.println("O zi buna!");
         System.out.println("==========");

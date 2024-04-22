@@ -7,7 +7,6 @@ import java.sql.SQLException;
 
 public class UserManagementService {
 
-    // inreg user
 
     // login user (du-te in db si vezi ca exista user cu nume si parola ca asta din u
 
@@ -26,7 +25,4 @@ public class UserManagementService {
         return dbUsersOperations.searchUserForLogin(u);
     }
 
-    //intre
-
-    //inregistrare user
 }
