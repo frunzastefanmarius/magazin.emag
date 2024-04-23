@@ -12,39 +12,7 @@ public class DbUsersOperations {
 
     //in clasa asta doar se cauta in DB
 
-    public Long searchUserForLogin(User user) {
-        Long idUser = null;//presupun ca e null
-        // citeste din db toti userii si returneaza lista lor
 
-        try {
-            // conectare la db cu incarcare driver
-            final String URLDB = "jdbc:postgresql://localhost:5432/emag";
-            final String USERNAMEDB = "postgres";
-            final String PWDDB = "postgres";
-            Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
-
-            // rulare sql
-            String q = "select id from users where username=? and password=?";
-
-            PreparedStatement pSt = conn.prepareStatement(q);
-
-            pSt.setString(1, user.getUsername());
-            pSt.setString(2, user.getPassword());
-
-            ResultSet rs = pSt.executeQuery();//???? aici ii dam valoarea rezulata in urma rularii in pgadmin.
-
-            //daca intra pe while inseamna ca a gasit ceva, daca nu gaseste si ID ramane null, nu intra pe while
-            while (rs.next()) {
-                idUser = rs.getLong("id");//si pune in idUser valoare care este in coloana id din pgadmin
-                System.out.println("(a intrat in while din DbUsersOperations si s a logat)");
-            }//daca intra pe aici macar o data inseamna ca este valorizat
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        if (idUser == null)
-            System.out.println("Un cont cu aceast user si aceasta parola nu exista.");
-        return idUser;
-    }
 
     public boolean insert(User u) throws SQLException {
 
@@ -119,6 +87,39 @@ public class DbUsersOperations {
             e.printStackTrace();
         }
         return lu;
+    }
+    public Long searchUserForLogin(User user) {
+        Long idUser = null;//presupun ca e null
+        // citeste din db toti userii si returneaza lista lor
+
+        try {
+            // conectare la db cu incarcare driver
+            final String URLDB = "jdbc:postgresql://localhost:5432/emag";
+            final String USERNAMEDB = "postgres";
+            final String PWDDB = "postgres";
+            Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
+
+            // rulare sql
+            String q = "select id from users where username=? and password=?";
+
+            PreparedStatement pSt = conn.prepareStatement(q);
+
+            pSt.setString(1, user.getUsername());
+            pSt.setString(2, user.getPassword());
+
+            ResultSet rs = pSt.executeQuery();//???? aici ii dam valoarea rezulata in urma rularii in pgadmin.
+
+            //daca intra pe while inseamna ca a gasit ceva, daca nu gaseste si ID ramane null, nu intra pe while
+            while (rs.next()) {
+                idUser = rs.getLong("id");//si pune in idUser valoare care este in coloana id din pgadmin
+                System.out.println("(a intrat in while din DbUsersOperations si s a logat)");
+            }//daca intra pe aici macar o data inseamna ca este valorizat
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (idUser == null)
+            System.out.println("Un cont cu aceast user si aceasta parola nu exista.");
+        return idUser;
     }
 
 }

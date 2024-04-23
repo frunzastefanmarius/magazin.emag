@@ -10,7 +10,7 @@ public class MyTestUsers {
 
     public static void main(String[] args) {
 
-    new MyTestUsers().testSelect(false);
+    new MyTestUsers().testSelect(true);
 
     }
 
@@ -40,7 +40,5 @@ public class MyTestUsers {
         for(User u: lu) {
             System.out.println(u);
         }
-
-
     }
 }

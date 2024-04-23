@@ -12,7 +12,7 @@ import java.util.List;
 public class DbBasketOperations {
 
 
-    public boolean insert (Basket b)  {
+    public boolean insert(Basket b) {
 
         // COD CARE SCRIE IN DB
 
@@ -20,8 +20,8 @@ public class DbBasketOperations {
 
         // conectare la db cu incarcare driver
         final String URLDB = "jdbc:postgresql://localhost:5432/emag";
-        final String USERNAMEDB ="postgres";
-        final String PWDDB ="vvv";
+        final String USERNAMEDB = "postgres";
+        final String PWDDB = "vvv";
         int val = 0; // 1
         try {
             Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
@@ -35,46 +35,42 @@ public class DbBasketOperations {
             e.printStackTrace();
         }
         boolean ok = false;
-        if(val!=0)
-            ok=true;
+        if (val != 0)
+            ok = true;
         return ok;
     }
 
     public List<BasketDisplay> readBasketOfAUser(Long idUser) {
         List<BasketDisplay> lp = new ArrayList<>();
-        // citeste din db cosul unui user
 
-try {
+        try {
+            final String URLDB = "jdbc:postgresql://localhost:5432/emag";
+            final String USERNAMEDB = "postgres";
+            final String PWDDB = "postgres";
+            Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
 
-    // conectare la db cu incarcare driver
-    final String URLDB = "jdbc:postgresql://localhost:5432/emag";
-    final String USERNAMEDB = "postgres";
-    final String PWDDB = "postgres";
-    Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
+            // rulare sql
+            String q = "select products.name as name, basket.id as id from products,basket \n" +
+                    "\t where basket.iduser=? \n" +
+                    "and basket.idproduct=products.id";
+            PreparedStatement pSt = conn.prepareStatement(q);
 
-    // rulare sql
-    String q="select products.name as name, basket.id as id from products,basket \n" +
-            "\t where basket.iduser=? \n" +
-            "and basket.idproduct=products.id";
-    PreparedStatement pSt = conn.prepareStatement(q);
+            pSt.setLong(1, idUser);
 
-    pSt.setLong(1,idUser);
-
-    ResultSet rs = pSt.executeQuery();
+            ResultSet rs = pSt.executeQuery();
 
 
-    while (rs.next()) {
+            while (rs.next()) {
 
-        String name = rs.getString("name").trim();
-        long  id = rs.getLong("id");
+                String name = rs.getString("name").trim();
+                long id = rs.getLong("id");
 
-        BasketDisplay p = new BasketDisplay(id,name);
-        lp.add(p);
-    }
-}
-catch (SQLException e) {
-    e.printStackTrace();
-}
+                BasketDisplay p = new BasketDisplay(id, name);
+                lp.add(p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         return lp;
     }
@@ -82,18 +78,9 @@ catch (SQLException e) {
 
     public boolean deleteBasketItem(Long idBasket) {
 
-
-        // COD CARE SCRIE IN DB
-
-
-
-        // daca are rezultate, citirea lor
-
-
-        // conectare la db cu incarcare driver
         final String URLDB = "jdbc:postgresql://localhost:5432/emag";
-        final String USERNAMEDB ="postgres";
-        final String PWDDB ="vvv";
+        final String USERNAMEDB = "postgres";
+        final String PWDDB = "vvv";
         int val = 0; // 1
         try {
             Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
@@ -107,12 +94,11 @@ catch (SQLException e) {
             e.printStackTrace();
         }
         boolean ok = false;
-        if(val!=0)
-            ok=true;
+        if (val != 0)
+            ok = true;
         return ok;
 
     }
-
 
 
 }

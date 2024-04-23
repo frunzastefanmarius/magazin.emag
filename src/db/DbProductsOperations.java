@@ -11,7 +11,7 @@ import java.util.List;
 public class DbProductsOperations {
 
 
-    public boolean insert (Product p)  {
+    public boolean insert(Product p) {
 
         // COD CARE SCRIE IN DB
 
@@ -19,8 +19,8 @@ public class DbProductsOperations {
 
         // conectare la db cu incarcare driver
         final String URLDB = "jdbc:postgresql://localhost:5432/emag";
-        final String USERNAMEDB ="postgres";
-        final String PWDDB ="vvv";
+        final String USERNAMEDB = "postgres";
+        final String PWDDB = "vvv";
         int val = 0; // 1
         try {
             Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
@@ -37,8 +37,8 @@ public class DbProductsOperations {
             e.printStackTrace();
         }
         boolean ok = false;
-        if(val!=0)
-            ok=true;
+        if (val != 0)
+            ok = true;
         return ok;
     }
 
@@ -46,49 +46,46 @@ public class DbProductsOperations {
         List<ProductDisplay> lp = new ArrayList<>();
         // citeste din db toti userii si returneaza lista lor
 
-try {
+        try {
 
-    // conectare la db cu incarcare driver
-    final String URLDB = "jdbc:postgresql://localhost:5432/emag";
-    final String USERNAMEDB = "postgres";
-    final String PWDDB = "postgres";
-    Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
+            // conectare la db cu incarcare driver
+            final String URLDB = "jdbc:postgresql://localhost:5432/emag";
+            final String USERNAMEDB = "postgres";
+            final String PWDDB = "postgres";
+            Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
 
-    // rulare sql
-    String q="select products.id as id, products.name as name,products.description as description, products.price as price, users.username as vendorname, categories.name as categoryname \n" +
-            "\tfrom products, users, categories\n" +
-            "\twhere products.iduser=users.id \n" +
-            "\tand products.idcategory=categories.id \n" +
-            "\torder by users.username asc ";
-    PreparedStatement pSt = conn.prepareStatement(q);
+            // rulare sql
+            String q = "select products.id as id, products.name as name,products.description as description, products.price as price, users.username as vendorname, categories.name as categoryname \n" +
+                    "\tfrom products, users, categories\n" +
+                    "\twhere products.iduser=users.id \n" +
+                    "\tand products.idcategory=categories.id \n" +
+                    "\torder by users.username asc ";
+            PreparedStatement pSt = conn.prepareStatement(q);
 
-    // pSt.set...
+            // pSt.set...
 
-    ResultSet rs = pSt.executeQuery();
+            ResultSet rs = pSt.executeQuery();
 
 
-    while (rs.next()) {
+            while (rs.next()) {
 
-        String name = rs.getString("name").trim();
-        String desc = rs.getString("description").trim();
-        double price = rs.getDouble("price");
+                String name = rs.getString("name").trim();
+                String desc = rs.getString("description").trim();
+                double price = rs.getDouble("price");
 
-        String vendorname = rs.getString("vendorname").trim();
-        String categoryname = rs.getString("categoryname").trim();
-        long  id = rs.getLong("id");
+                String vendorname = rs.getString("vendorname").trim();
+                String categoryname = rs.getString("categoryname").trim();
+                long id = rs.getLong("id");
 
-        ProductDisplay p = new ProductDisplay( name,id, desc,String.valueOf(price), vendorname, categoryname);
-        lp.add(p);
-    }
-}
-catch (SQLException e) {
-    e.printStackTrace();
-}
+                ProductDisplay p = new ProductDisplay(name, id, desc, String.valueOf(price), vendorname, categoryname);
+                lp.add(p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         return lp;
     }
-
-
 
 
 }

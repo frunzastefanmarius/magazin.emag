@@ -19,11 +19,11 @@ public class MyTestProducts {
     private void testInsert () {
 
 
-        Product p1= new Product("laptop dell", "laptop dell cu procesor de ala s memorie tot de aia si toate alea sa te prosteasca ", 4500, 1,1 );
-        Product p2= new Product("laptop apple", "laptop apple m3 cu alea bune  ", 14500, 4,1 );
+        Product p1= new Product("telefon", "descriere telefon", 4500, 1,1 );
+        Product p2= new Product("laptop", "descriere laptop", 1500, 1,1 );
 
-        Product p3= new Product("salam pikok", "ala polonez ", 25, 2,1 );
-        Product p4= new Product("apa borsec", "apa de aia cu aia  ", 3.99, 3,1 );
+        Product p3= new Product("pizza", "descriere pizza", 25, 2,1 );
+        Product p4= new Product("apa", "descriere apa", 3.99, 2,1 );
 
 
         DbProductsOperations dbProductsOperations = new DbProductsOperations();

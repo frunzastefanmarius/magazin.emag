@@ -1,9 +1,10 @@
 package service;
 
+import controller.BasketManagementService;
+import controller.ProductManagementService;
 import controller.UserManagementService;
 import db.DbBasketOperations;
 import db.DbProductsOperations;
-import db.DbUsersOperations;
 import entity.Basket;
 import entity.BasketDisplay;
 import entity.ProductDisplay;
@@ -24,7 +25,6 @@ public class emag {
 
         Scanner scanner = new Scanner(System.in);
         String input = null;
-
         do {
             System.out.println("Alegeti una din urmatoarele actiuni");
             System.out.println("1. Inregistrare");
@@ -58,6 +58,7 @@ public class emag {
         System.out.println("Bine ai venit! Hai sa ne inregistram");
 
         do {
+            Long idUser = null;
             existentUser = false;
             String usernameIntrodus;
             String pwdIntrodus;
@@ -80,18 +81,30 @@ public class emag {
                 System.out.println("Parola trebuie sa fie mai lunga de 8 caractere si sa nu contina spatii.");
                 start();
             }else {
-                pwdIntrodus=pwd;
+                pwd=pwdIntrodus;
             }
             User u = new User(username, pwd);
 
-            DbUsersOperations db = new DbUsersOperations();
+//            DbUsersOperations db = new DbUsersOperations();
+//
+//            try {
+//                db.insert(u);
+//                System.out.println("Felicitari! Te-ai inregistrat cu succes, "+ username + "!");
+//            } catch (SQLException e) {
+//                existentUser = true;
+//                System.out.println("Ne pare rau dar username " + username + " nu este disponibil. Te rugam sa incerci altul.");
+//            }
+
+            UserManagementService ums = new UserManagementService();
+
             try {
-                db.insert(u);
+                ums.register(u);
                 System.out.println("Felicitari! Te-ai inregistrat cu succes, "+ username + "!");
-            } catch (SQLException e) {
+            }catch (SQLException e){
                 existentUser = true;
                 System.out.println("Ne pare rau dar username " + username + " nu este disponibil. Te rugam sa incerci altul.");
             }
+
         }
         while (existentUser);
     }
@@ -112,8 +125,11 @@ public class emag {
             UserManagementService ums = new UserManagementService();
             idUser = ums.login(u);
 
+            if(loginSuccessfull){
             attempts++;
             System.out.println("Mai aveti " + (maxAttempts-attempts) + " incercari.");
+            }
+
         }
         while (idUser == null && attempts < maxAttempts);
 
@@ -139,7 +155,8 @@ public class emag {
             System.out.println("1. Vizualizeaza lista de produse");
             System.out.println("2. Adauga un produs in cos");
             System.out.println("3. Afisez cosul");
-            System.out.println("3. Sterge un produs din cos");
+            System.out.println("4. Sterge un produs din cos");
+            System.out.println("5. Afiseaza lista userilor");
             System.out.println("0. Exit");
             System.out.print("Enter your choice: ");
             userMenuOption = scanner.nextInt();
@@ -147,16 +164,20 @@ public class emag {
 
             switch (userMenuOption) {
                 case 1:
-                    readAllProducts();
+                    showAllProducts();
                     showMenuOptions(idUser);
                 case 2:
                     addProductsInBasket(idUser);
                     showMenuOptions(idUser);
                 case 3:
-                    displayBasket(idUser);
+                    readBasket(idUser);
                     showMenuOptions(idUser);
                 case 4:
                     deleteProductFromBasket(idUser);
+                    showMenuOptions(idUser);
+                case 5:
+                    boolean b=false;
+                    showAllUsers(b);
                     showMenuOptions(idUser);
                 case 0:
                     endProgram();
@@ -167,47 +188,42 @@ public class emag {
         start();
     }
 
-    public static void readAllProducts() {
+    public static void showAllProducts() {
         System.out.println("Aceasta este lista de produse");
         // list products
-        DbProductsOperations db = new DbProductsOperations();
-        List<ProductDisplay> lp = db.readAllProducts();
-
+        ProductManagementService pms = new ProductManagementService();
+        List<ProductDisplay> lp = pms.showAllProducts();
         for (ProductDisplay p : lp) {
             System.out.println(p);
         }
     }
 
-    public static void addProductsInBasket(Long idUser) {//aici ii tirmit matodei idUser ca sa stie in ce cos sa puna produsul
+    public static void addProductsInBasket(Long idUser) {
         System.out.println("Adauga produse in cos:");
         // simulam add in cos a produselor
         Scanner sc = new Scanner(System.in);
         System.out.print("ce id pui in cos:");
-        Long idprod = sc.nextLong();
+        long idprod = sc.nextLong();
 
         Basket b = new Basket(idUser, idprod);
 
-        DbBasketOperations dbBasketOperations = new DbBasketOperations();
-        dbBasketOperations.insert(b);
+        BasketManagementService bms = new BasketManagementService();
+        bms.insertInBasket(b);
 
-        System.out.print("ce id pui in cos:");
-        idprod = sc.nextLong();
-        b = new Basket(idUser, idprod);
-        dbBasketOperations.insert(b);
     }
 
-    public static void displayBasket(Long idUser) {
+    public static void readBasket(Long idUser) {
         // afisez cosului userului logat
-        DbBasketOperations dbb = new DbBasketOperations();
-        List<BasketDisplay> lb = dbb.readBasketOfAUser(idUser);
-        for (BasketDisplay bask : lb) {
-            System.out.println(bask);
+        BasketManagementService bms = new BasketManagementService();
+        List<BasketDisplay> lb = bms.readBasket(idUser);
+        for (BasketDisplay basketOfCurrentUser : lb) {
+            System.out.println(basketOfCurrentUser);
         }
-        // cer din nou cosul de la db
-        lb = dbb.readBasketOfAUser(idUser);
-        for (BasketDisplay bask : lb) {
-            System.out.println(bask);
-        }
+//        cer din nou cosul de la db
+//        lb = bms.readBasket(idUser);
+//        for (BasketDisplay bask : lb) {
+//            System.out.println(bask);
+//        }
     }
 
     public static void deleteProductFromBasket(Long idUser) {
@@ -224,6 +240,24 @@ public class emag {
         lb = dbb.readBasketOfAUser(idUser);
         for (BasketDisplay bask : lb) {
             System.out.println(bask);
+        }
+    }
+
+    public static void showAllUsers(boolean b) {
+        int codUnic = 1234;
+        System.out.println("Te rog sa introduci codul unic: ");
+        Scanner sca = new Scanner(System.in);
+        int codIntrodus = sca.nextInt();
+        if (codIntrodus == codUnic) {
+            b = true;
+            UserManagementService ums = new UserManagementService();
+            List<User> lu = ums.ShowAllUsers(b);
+
+            for (User u : lu) {
+                System.out.println(u);
+            }
+        } else {
+            System.out.println("Codul introdus nu este corect!");
         }
     }
 

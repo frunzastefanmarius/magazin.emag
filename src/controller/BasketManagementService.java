@@ -11,10 +11,22 @@ import java.util.List;
 
 public class BasketManagementService {
 
-//    public List<BasketDisplay> readBasket() {
+    public boolean insertInBasket(Basket b) {
+        DbBasketOperations dbBasketOperations = new DbBasketOperations();
+        return dbBasketOperations.insert(b);
+    }
+
+    public List<BasketDisplay> readBasket(Long idUser) {
+
+        DbBasketOperations dbBasketOperations = new DbBasketOperations();
+        return dbBasketOperations.readBasketOfAUser(idUser);
+    }
+
+//    public Long readBasket(Long id) {
 //
 //        DbBasketOperations dbBasketOperations = new DbBasketOperations();
-//        return dbBasketOperations.readBasketOfAUser(BasketDisplay);
+//        return dbBasketOperations.readBasketOfAUser(idUser);
 //    }
+
 
 }
