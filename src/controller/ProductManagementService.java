@@ -16,10 +16,10 @@ public class ProductManagementService {
         return db.readAllProducts();
     }
 
-//    public Long insert(Product p) {
-//
-//        DbProductsOperations dbProductsOperations = new DbProductsOperations();
-//        return dbProductsOperations.insert(p);
-//    }
+    public boolean insert(Product p) {
+
+        DbProductsOperations dbProductsOperations = new DbProductsOperations();
+        return dbProductsOperations.insert(p);
+    }
 
 }

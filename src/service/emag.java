@@ -1,17 +1,17 @@
 package service;
 
 import controller.BasketManagementService;
+import controller.CategoryManagementService;
 import controller.ProductManagementService;
 import controller.UserManagementService;
 import db.DbBasketOperations;
 import db.DbProductsOperations;
-import entity.Basket;
-import entity.BasketDisplay;
-import entity.ProductDisplay;
-import entity.User;
+import entity.*;
 
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.List;
+
 import java.util.Scanner;
 
 public class emag {
@@ -62,8 +62,8 @@ public class emag {
             existentUser = false;
             String usernameIntrodus;
             String pwdIntrodus;
-            String username=null;
-            String pwd=null;
+            String username = null;
+            String pwd = null;
             System.out.println("Te rugam sa introduci un username si o parola: ");
             Scanner sc = new Scanner(System.in);
             System.out.print("New Username:");
@@ -71,17 +71,17 @@ public class emag {
             System.out.print("Pwd:");
             pwdIntrodus = sc.nextLine();
 
-            if(usernameIntrodus.matches("[a-zA-Z]+")){
-                username=usernameIntrodus;
-            }else {
+            if (usernameIntrodus.matches("[a-zA-Z]+")) {
+                username = usernameIntrodus;
+            } else {
                 System.out.println("Username poate contine doar litere mari, litere mici si nu pot exista spatii. Te rugam sa incerci din nou");
                 start();
             }
-            if (pwdIntrodus.length()<8 && pwdIntrodus.contains(" ")){
+            if (pwdIntrodus.length() < 8 && pwdIntrodus.contains(" ")) {
                 System.out.println("Parola trebuie sa fie mai lunga de 8 caractere si sa nu contina spatii.");
                 start();
-            }else {
-                pwd=pwdIntrodus;
+            } else {
+                pwd = pwdIntrodus;
             }
             User u = new User(username, pwd);
 
@@ -99,8 +99,8 @@ public class emag {
 
             try {
                 ums.register(u);
-                System.out.println("Felicitari! Te-ai inregistrat cu succes, "+ username + "!");
-            }catch (SQLException e){
+                System.out.println("Felicitari! Te-ai inregistrat cu succes, " + username + "!");
+            } catch (SQLException e) {
                 existentUser = true;
                 System.out.println("Ne pare rau dar username " + username + " nu este disponibil. Te rugam sa incerci altul.");
             }
@@ -125,9 +125,9 @@ public class emag {
             UserManagementService ums = new UserManagementService();
             idUser = ums.login(u);
 
-            if(loginSuccessfull){
-            attempts++;
-            System.out.println("Mai aveti " + (maxAttempts-attempts) + " incercari.");
+            if (loginSuccessfull) {
+                attempts++;
+                System.out.println("Mai aveti " + (maxAttempts - attempts) + " incercari.");
             }
 
         }
@@ -154,13 +154,16 @@ public class emag {
             System.out.println("Menu:");    //aici afisam pagina de "Home";
             System.out.println("1. Vizualizeaza lista de produse");
             System.out.println("2. Adauga un produs in cos");
-            System.out.println("3. Afisez cosul");
+            System.out.println("3. Afiseaza cosul de cumparaturi");
             System.out.println("4. Sterge un produs din cos");
             System.out.println("5. Afiseaza lista userilor");
+            System.out.println("6. Adauga un produs");
+            System.out.println("7. Afiseaza toate categoriile");
             System.out.println("0. Exit");
             System.out.print("Enter your choice: ");
             userMenuOption = scanner.nextInt();
             DbBasketOperations dbb = new DbBasketOperations();
+            boolean b = false;
 
             switch (userMenuOption) {
                 case 1:
@@ -176,8 +179,13 @@ public class emag {
                     deleteProductFromBasket(idUser);
                     showMenuOptions(idUser);
                 case 5:
-                    boolean b=false;
                     showAllUsers(b);
+                    showMenuOptions(idUser);
+                case 6:
+                    addProducts(idUser);
+                    showMenuOptions(idUser);
+                case 7:
+                    showAllCategories();
                     showMenuOptions(idUser);
                 case 0:
                     endProgram();
@@ -200,7 +208,6 @@ public class emag {
 
     public static void addProductsInBasket(Long idUser) {
         System.out.println("Adauga produse in cos:");
-        // simulam add in cos a produselor
         Scanner sc = new Scanner(System.in);
         System.out.print("ce id pui in cos:");
         long idprod = sc.nextLong();
@@ -213,17 +220,12 @@ public class emag {
     }
 
     public static void readBasket(Long idUser) {
-        // afisez cosului userului logat
         BasketManagementService bms = new BasketManagementService();
         List<BasketDisplay> lb = bms.readBasket(idUser);
         for (BasketDisplay basketOfCurrentUser : lb) {
             System.out.println(basketOfCurrentUser);
         }
-//        cer din nou cosul de la db
-//        lb = bms.readBasket(idUser);
-//        for (BasketDisplay bask : lb) {
-//            System.out.println(bask);
-//        }
+
     }
 
     public static void deleteProductFromBasket(Long idUser) {
@@ -261,6 +263,48 @@ public class emag {
         }
     }
 
+    public static void addProducts(Long idUser) {
+
+        //aici trebuie sa adaugam partea de sout si sa completeze de la tastatura toate campurile necesare adaugarii produsului in DB
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Te rugam sa introduci datele necesare pentru a adauga produsul in cos.");
+            System.out.println("nume produs: ");
+            String name = sc.nextLine();
+            System.out.println("descriere produs: ");
+            String description = sc.nextLine();
+            System.out.println("pret produs: ");
+            Double price = Double.parseDouble(sc.nextLine());
+
+            System.out.println("categorie produs: ");
+            Long idCategoryIntrodus = Long.parseLong(sc.nextLine());
+            Long idCategory;
+            //trec prin toata lista de idCategory si daca gasesc idCategory introdus, il fac egal cu idCategory si merg mai departe
+
+            if(true)
+               idCategory=idCategoryIntrodus;
+            Long iduser = idUser;
+            Product p = new Product(name, description, price, iduser, idCategory);
+
+            ProductManagementService pms = new ProductManagementService();
+            pms.insert(p);
+        } catch (NumberFormatException e) {
+            System.out.println("Pretul nu poate contine litere.");
+            addProducts(idUser);
+        }
+
+    }
+    public static void showAllCategories(){
+        System.out.println("Aceasta este lista de categorii:");
+
+        CategoryManagementService cms = new CategoryManagementService();
+        List<CategoryDisplay> lc = cms.showAllCategories();
+
+        for (CategoryDisplay c : lc) {
+            System.out.println(c);
+        }
+    }
+
     public static void endProgram() {
         System.out.println("==========");
         System.out.println("O zi buna!");
@@ -268,5 +312,9 @@ public class emag {
         emag.start();
         //System.exit(0);
     }
+
+//    public void pretProdus(String){
+//
+//    }
 
 }

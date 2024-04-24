@@ -64,10 +64,10 @@ public class DbProductsOperations {
 
             // pSt.set...
 
-            ResultSet rs = pSt.executeQuery();
+            ResultSet rs = pSt.executeQuery();//executa queriul iar cat timp am rezultate retunreaza true
 
 
-            while (rs.next()) {
+            while (rs.next()) {//rs este ce imi returneaza baza de date
 
                 String name = rs.getString("name").trim();
                 String desc = rs.getString("description").trim();
@@ -77,7 +77,7 @@ public class DbProductsOperations {
                 String categoryname = rs.getString("categoryname").trim();
                 long id = rs.getLong("id");
 
-                ProductDisplay p = new ProductDisplay(name, id, desc, String.valueOf(price), vendorname, categoryname);
+                ProductDisplay p = new ProductDisplay(name, id, desc, String.valueOf(price), vendorname, categoryname);//aici creaza un obiect de tipul ce vreau eu, si dupa il adauga in lista pe care o returneaza metoda.
                 lp.add(p);
             }
         } catch (SQLException e) {
@@ -86,6 +86,7 @@ public class DbProductsOperations {
 
         return lp;
     }
+
 
 
 }
