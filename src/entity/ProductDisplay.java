@@ -6,13 +6,9 @@ public class ProductDisplay {
 
     private long id;
     private String description;
-
     private String price;
-
     private String vendorName;
-
     private String categoryName;
-
     public String getName() {
         return name;
     }

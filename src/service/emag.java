@@ -47,7 +47,7 @@ public class emag {
                         start();
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Te rugam sa alegi una din optiunile disponibile");
+                System.out.println("Nu ai ales una din actiunile disponibile");
                 start();
             }
         } while (input.equals(0));
@@ -64,12 +64,28 @@ public class emag {
             String pwdIntrodus;
             String username = null;
             String pwd = null;
+            boolean buyer = false;
             System.out.println("Te rugam sa introduci un username si o parola: ");
             Scanner sc = new Scanner(System.in);
-            System.out.print("New Username:");
+            System.out.print("New Username: ");
             usernameIntrodus = sc.nextLine();
-            System.out.print("Pwd:");
+            System.out.print("Pwd: ");
             pwdIntrodus = sc.nextLine();
+            try {
+                System.out.println("Selecteaza tipul de cont pe care doresti sa il creezi: ");
+                System.out.println("1. Vanzator.");
+                System.out.println("2. Cumparator. ");
+                int tipUser = Integer.parseInt(sc.nextLine());
+                if (tipUser == 1 || tipUser == 2) {
+                    if (tipUser==1){
+                        buyer = false;
+                    }else buyer=true;
+                } else System.out.println("nu ai ales un numar valid");
+                start();
+            } catch (NumberFormatException e) {
+                System.out.println("Ati introdus un text invalid.");
+                start();
+            }
 
             if (usernameIntrodus.matches("[a-zA-Z]+")) {
                 username = usernameIntrodus;
@@ -83,21 +99,11 @@ public class emag {
             } else {
                 pwd = pwdIntrodus;
             }
-            User u = new User(username, pwd);
 
-//            DbUsersOperations db = new DbUsersOperations();
-//
-//            try {
-//                db.insert(u);
-//                System.out.println("Felicitari! Te-ai inregistrat cu succes, "+ username + "!");
-//            } catch (SQLException e) {
-//                existentUser = true;
-//                System.out.println("Ne pare rau dar username " + username + " nu este disponibil. Te rugam sa incerci altul.");
-//            }
-
-            UserManagementService ums = new UserManagementService();
+            User u = new User(username, pwd, buyer);
 
             try {
+                UserManagementService ums = new UserManagementService();
                 ums.register(u);
                 System.out.println("Felicitari! Te-ai inregistrat cu succes, " + username + "!");
             } catch (SQLException e) {
@@ -281,8 +287,8 @@ public class emag {
             Long idCategory;
             //trec prin toata lista de idCategory si daca gasesc idCategory introdus, il fac egal cu idCategory si merg mai departe
 
-            if(true)
-               idCategory=idCategoryIntrodus;
+            if (true)
+                idCategory = idCategoryIntrodus;
             Long iduser = idUser;
             Product p = new Product(name, description, price, iduser, idCategory);
 
@@ -294,7 +300,8 @@ public class emag {
         }
 
     }
-    public static void showAllCategories(){
+
+    public static void showAllCategories() {
         System.out.println("Aceasta este lista de categorii:");
 
         CategoryManagementService cms = new CategoryManagementService();

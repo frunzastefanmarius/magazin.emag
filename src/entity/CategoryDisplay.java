@@ -12,9 +12,9 @@ public class CategoryDisplay {
         this.description = description;
     }
 
-    public CategoryDisplay(long id) {
-        this.id = id;
-    }
+//    public CategoryDisplay(long id) {
+//        this.id = id;
+//    }
 
     @Override
     public String toString() {

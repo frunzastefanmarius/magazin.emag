@@ -23,7 +23,8 @@ public class DbCategoryOperations {
             Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
 
             // rulare sql
-            String q = "SELECT id from categories;";
+            String q = "SELECT * FROM public.categories\n" +
+                    "ORDER BY id ASC ";
             PreparedStatement pSt = conn.prepareStatement(q);
 
             // pSt.set...
@@ -34,16 +35,16 @@ public class DbCategoryOperations {
             while (rs.next()) {
 
                 Long id = rs.getLong("id");
+                String numeCategorie = rs.getString("name").trim();
+                String descriereCategorie = rs.getString("description").trim();
 
 
-                CategoryDisplay p = new CategoryDisplay(id);//aici creaza un obiect de tipul ce vreau eu, si dupa il adauga in lista pe care o returneaza metoda.
-                lc.add(p);
+                CategoryDisplay c = new CategoryDisplay(id, numeCategorie, descriereCategorie);//aici creaza un obiect de tipul ce vreau eu, si dupa il adauga in lista pe care o returneaza metoda.
+                lc.add(c);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return lc;
     }
-
 }
