@@ -7,7 +7,6 @@ import controller.ProductManagementService;
 import controller.UserManagementService;
 import db.DbBasketOperations;
 import entity.*;
-
 import java.util.List;
 import java.util.Scanner;
 
