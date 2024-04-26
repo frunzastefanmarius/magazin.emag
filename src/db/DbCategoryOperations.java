@@ -12,25 +12,18 @@ public class DbCategoryOperations {
 
     public List<CategoryDisplay> readAllCategory() {
         List<CategoryDisplay> lc = new ArrayList<>();
-        // citeste din db toti userii si returneaza lista lor
 
         try {
-
-            // conectare la db cu incarcare driver
             final String URLDB = "jdbc:postgresql://localhost:5432/emag";
             final String USERNAMEDB = "postgres";
             final String PWDDB = "postgres";
             Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
 
-            // rulare sql
             String q = "SELECT * FROM public.categories\n" +
                     "ORDER BY id ASC ";
             PreparedStatement pSt = conn.prepareStatement(q);
 
-            // pSt.set...
-
             ResultSet rs = pSt.executeQuery();
-
 
             while (rs.next()) {
 

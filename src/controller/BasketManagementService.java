@@ -22,11 +22,4 @@ public class BasketManagementService {
         return dbBasketOperations.readBasketOfAUser(idUser);
     }
 
-//    public Long readBasket(Long id) {
-//
-//        DbBasketOperations dbBasketOperations = new DbBasketOperations();
-//        return dbBasketOperations.readBasketOfAUser(idUser);
-//    }
-
-
 }

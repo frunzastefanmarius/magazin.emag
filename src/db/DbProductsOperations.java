@@ -13,11 +13,6 @@ public class DbProductsOperations {
 
     public boolean insert(Product p) {
 
-        // COD CARE SCRIE IN DB
-
-        // daca are rezultate, citirea lor
-
-        // conectare la db cu incarcare driver
         final String URLDB = "jdbc:postgresql://localhost:5432/emag";
         final String USERNAMEDB = "postgres";
         final String PWDDB = "vvv";
@@ -44,25 +39,19 @@ public class DbProductsOperations {
 
     public List<ProductDisplay> readAllProducts() {
         List<ProductDisplay> lp = new ArrayList<>();
-        // citeste din db toti userii si returneaza lista lor
 
         try {
-
-            // conectare la db cu incarcare driver
             final String URLDB = "jdbc:postgresql://localhost:5432/emag";
             final String USERNAMEDB = "postgres";
             final String PWDDB = "postgres";
             Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
 
-            // rulare sql
             String q = "select products.id as id, products.name as name,products.description as description, products.price as price, users.username as vendorname, categories.name as categoryname \n" +
                     "\tfrom products, users, categories\n" +
                     "\twhere products.iduser=users.id \n" +
                     "\tand products.idcategory=categories.id \n" +
                     "\torder by users.username asc ";
             PreparedStatement pSt = conn.prepareStatement(q);
-
-            // pSt.set...
 
             ResultSet rs = pSt.executeQuery();//executa queriul iar cat timp am rezultate retunreaza true
 

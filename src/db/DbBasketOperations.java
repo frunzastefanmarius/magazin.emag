@@ -14,11 +14,6 @@ public class DbBasketOperations {
 
     public boolean insert(Basket b) {
 
-        // COD CARE SCRIE IN DB
-
-        // daca are rezultate, citirea lor
-
-        // conectare la db cu incarcare driver
         final String URLDB = "jdbc:postgresql://localhost:5432/emag";
         final String USERNAMEDB = "postgres";
         final String PWDDB = "vvv";
@@ -49,7 +44,6 @@ public class DbBasketOperations {
             final String PWDDB = "postgres";
             Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
 
-            // rulare sql
             String q = "select products.name as name, basket.id as id from products,basket \n" +
                     "\t where basket.iduser=? \n" +
                     "and basket.idproduct=products.id";
@@ -85,7 +79,6 @@ public class DbBasketOperations {
         try {
             Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
 
-            // rulare sql
             PreparedStatement pSt = conn.prepareStatement("delete from basket where id = ?");
             pSt.setLong(1, idBasket);
 

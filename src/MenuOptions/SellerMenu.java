@@ -20,10 +20,10 @@ public class SellerMenu {
             //aici user e deja logat si alege din meniu ce vrea sa faca
             System.out.println("Menu pentru vanzator:");    //aici afisam pagina de "Home";
             System.out.println("1. Adauga un produs");
-            System.out.println("2. Afiseaza toate categoriile");
-            System.out.println("3. Afiseaza lista userilor");
+            System.out.println("2. Afiseaza lista userilor");
+            System.out.println("3. Afiseaza lista produselor");
             System.out.println("0. Exit");
-            System.out.print("Enter your choice: ");
+            System.out.println("Enter your choice: ");
             userMenuOption = scanner.nextInt();
             DbBasketOperations dbb = new DbBasketOperations();
             boolean b = false;
@@ -33,10 +33,10 @@ public class SellerMenu {
                     addProducts(idUser);
                     showMenuOptions(idUser);
                 case 2:
-                    showAllCategories();
+                    showAllUsers(b);
                     showMenuOptions(idUser);
                 case 3:
-                    showAllUsers(b);
+                    showAllProducts();
                     showMenuOptions(idUser);
                 case 0:
                     endProgram();
@@ -56,46 +56,6 @@ public class SellerMenu {
             System.out.println(p);
         }
     }
-
-    public static void addProductsInBasket(Long idUser) {
-        System.out.println("Adauga produse in cos:");
-        Scanner sc = new Scanner(System.in);
-        System.out.print("ce id pui in cos:");
-        long idprod = sc.nextLong();
-
-        Basket b = new Basket(idUser, idprod);
-
-        BasketManagementService bms = new BasketManagementService();
-        bms.insertInBasket(b);
-
-    }
-
-    public static void readBasket(Long idUser) {
-        BasketManagementService bms = new BasketManagementService();
-        List<BasketDisplay> lb = bms.readBasket(idUser);
-        for (BasketDisplay basketOfCurrentUser : lb) {
-            System.out.println(basketOfCurrentUser);
-        }
-
-    }
-
-    public static void deleteProductFromBasket(Long idUser) {
-
-        // sterg din cos
-
-        System.out.print("ce id sterg din cos:");
-        Scanner sca = new Scanner(System.in);
-        Long idCosDeSters = sca.nextLong();
-        DbBasketOperations dbb = new DbBasketOperations();
-        List<BasketDisplay> lb = dbb.readBasketOfAUser(idUser);
-        dbb.deleteBasketItem(idCosDeSters);
-        // cer din nou cosul de la db
-        lb = dbb.readBasketOfAUser(idUser);
-        for (BasketDisplay bask : lb) {
-            System.out.println(bask);
-        }
-    }
-
     public static void showAllUsers(boolean b) {
         int codUnic = 1234;
         System.out.println("Te rog sa introduci codul unic: ");
@@ -127,6 +87,7 @@ public class SellerMenu {
             System.out.println("pret produs: ");
             Double price = Double.parseDouble(sc.nextLine());
 
+            showAllCategories();
             System.out.println("categorie produs: ");
             Long idCategoryIntrodus = Long.parseLong(sc.nextLine());
             Long idCategory;
@@ -139,11 +100,11 @@ public class SellerMenu {
 
             ProductManagementService pms = new ProductManagementService();
             pms.insert(p);
+            System.out.println("Produsul a fost adaugat cu succes!");
         } catch (NumberFormatException e) {
             System.out.println("Pretul nu poate contine litere.");
             addProducts(idUser);
         }
-
     }
 
     public static void showAllCategories() {

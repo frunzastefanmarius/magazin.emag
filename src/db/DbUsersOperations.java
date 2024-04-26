@@ -8,17 +8,10 @@ import java.util.List;
 
 public class DbUsersOperations {
 
-    //in clasa asta doar se cauta in DB
-
-
+    //in clasa asta doar se cauta in DB. metodele din clasa asta la accesam din UMS
 
     public boolean insert(User u) throws SQLException {
 
-        // COD CARE SCRIE IN DB
-
-        // daca are rezultate, citirea lor
-
-        // conectare la db cu incarcare driver
         final String URLDB = "jdbc:postgresql://localhost:5432/emag";
         final String USERNAMEDB = "postgres";
         final String PWDDB = "vvv";
@@ -55,15 +48,12 @@ public class DbUsersOperations {
             final String PWDDB = "postgres";
             Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
 
-            // rulare sql
             String q;
             if (allDespiteStatus)
                 q = "select * from users order by username asc ";
             else
                 q = "select * from users where isActive=true order by username asc ";
             PreparedStatement pSt = conn.prepareStatement(q);
-
-            // pSt.set...
 
             ResultSet rs = pSt.executeQuery();
 
@@ -91,13 +81,11 @@ public class DbUsersOperations {
         // citeste din db toti userii si returneaza lista lor
 
         try {
-            // conectare la db cu incarcare driver
             final String URLDB = "jdbc:postgresql://localhost:5432/emag";
             final String USERNAMEDB = "postgres";
             final String PWDDB = "postgres";
             Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
 
-            // rulare sql
             String q = "select id from users where username=? and password=?";
 
             PreparedStatement pSt = conn.prepareStatement(q);
@@ -105,7 +93,7 @@ public class DbUsersOperations {
             pSt.setString(1, user.getUsername());
             pSt.setString(2, user.getPassword());
 
-            ResultSet rs = pSt.executeQuery();//???? aici ii dam valoarea rezulata in urma rularii in pgadmin.
+            ResultSet rs = pSt.executeQuery();//aici ii dam valoarea rezulata in urma rularii in pgadmin.
 
             //daca intra pe while inseamna ca a gasit ceva, daca nu gaseste si ID ramane null, nu intra pe while
             while (rs.next()) {
@@ -123,31 +111,28 @@ public class DbUsersOperations {
         boolean isBuyer = false;
 
         try {
-            // conectare la db cu incarcare driver
             final String URLDB = "jdbc:postgresql://localhost:5432/emag";
             final String USERNAMEDB = "postgres";
             final String PWDDB = "postgres";
             Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
 
-            // rulare sql
             String q = "SELECT isBuyer FROM users WHERE id=?";
 
             PreparedStatement pSt = conn.prepareStatement(q);
 
             pSt.setLong(1, idUser);
 
-            ResultSet rs = pSt.executeQuery();//???? aici ii dam valoarea rezulata in urma rularii in pgadmin.
+            ResultSet rs = pSt.executeQuery();//aici ii dam valoarea rezulata in urma rularii in pgadmin.
 
             //daca intra pe while inseamna ca a gasit ceva, daca nu gaseste si ID ramane null, nu intra pe while
             while (rs.next()) {
-                isBuyer = rs.getBoolean("isbuyer");//si pune in idUser valoare care este in coloana id din pgadmin
+                isBuyer = rs.getBoolean("isbuyer");//si pune in isBuyer valoare care este in coloana isbuyer din pgadmin
                 System.out.println("(a intrat in while din DbUsersOperations si a verificat daca user cu acest id este buyer sau seller)");
             }//daca intra pe aici macar o data inseamna ca este valorizat
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (true)
-            System.out.println("Posibil sa mearga posibil sa nu mearga");
+            //System.out.println("Posibil sa mearga posibil sa nu mearga"); //a mers
         return isBuyer;
 
     }

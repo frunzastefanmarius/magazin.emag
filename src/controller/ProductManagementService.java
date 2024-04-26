@@ -17,9 +17,7 @@ public class ProductManagementService {
     }
 
     public boolean insert(Product p) {
-
         DbProductsOperations dbProductsOperations = new DbProductsOperations();
         return dbProductsOperations.insert(p);
     }
-
 }

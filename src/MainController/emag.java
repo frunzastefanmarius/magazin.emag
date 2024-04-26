@@ -15,9 +15,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class emag {
-
-    //aici fac metoda de inregistrare cu void
-
     Long idUser = -1L;//daca nu iese asa trimit parametrul idUser prin metoda
     //nu a iesit asa pentru ca am metode statice
 
