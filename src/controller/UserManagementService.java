@@ -29,5 +29,10 @@ public class UserManagementService {
         List<User> lu = db.readAllUsers(b);
         return lu;
     }
+    public boolean checkUserType(Long idUser){
+        DbUsersOperations db = new DbUsersOperations();
+        boolean buyerOrSeller = db.userType(idUser);
+        return buyerOrSeller;
+    }
 
 }
