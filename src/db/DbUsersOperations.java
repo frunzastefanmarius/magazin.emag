@@ -1,9 +1,7 @@
 package db;
 
 import entity.User;
-import service.emag;
 
-import java.security.Provider;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,6 +118,38 @@ public class DbUsersOperations {
         if (idUser == null)
             System.out.println("Un cont cu aceast user si aceasta parola nu exista.");
         return idUser;
+    }
+    public boolean userType(Long idUser){
+        boolean isBuyer = false;
+
+        try {
+            // conectare la db cu incarcare driver
+            final String URLDB = "jdbc:postgresql://localhost:5432/emag";
+            final String USERNAMEDB = "postgres";
+            final String PWDDB = "postgres";
+            Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
+
+            // rulare sql
+            String q = "SELECT isBuyer FROM users WHERE id=?";
+
+            PreparedStatement pSt = conn.prepareStatement(q);
+
+            pSt.setLong(1, idUser);
+
+            ResultSet rs = pSt.executeQuery();//???? aici ii dam valoarea rezulata in urma rularii in pgadmin.
+
+            //daca intra pe while inseamna ca a gasit ceva, daca nu gaseste si ID ramane null, nu intra pe while
+            while (rs.next()) {
+                isBuyer = rs.getBoolean("isbuyer");//si pune in idUser valoare care este in coloana id din pgadmin
+                System.out.println("(a intrat in while din DbUsersOperations si a verificat daca user cu acest id este buyer sau seller)");
+            }//daca intra pe aici macar o data inseamna ca este valorizat
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (true)
+            System.out.println("Posibil sa mearga posibil sa nu mearga");
+        return isBuyer;
+
     }
 
 }
