@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/emagLastVersion.iml" filepath="$PROJECT_DIR$/emagLastVersion.iml" />
+      <module fileurl="file://$PROJECT_DIR$/magazin.tip.emag.iml" filepath="$PROJECT_DIR$/magazin.tip.emag.iml" />
     </modules>
   </component>
 </project>
