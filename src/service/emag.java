@@ -65,50 +65,54 @@ public class emag {
             String username = null;
             String pwd = null;
             boolean buyer = false;
-            System.out.println("Te rugam sa introduci un username si o parola: ");
-            Scanner sc = new Scanner(System.in);
-            System.out.print("New Username: ");
-            usernameIntrodus = sc.nextLine();
-            System.out.print("Pwd: ");
-            pwdIntrodus = sc.nextLine();
             try {
+                System.out.println("Te rugam sa introduci un username si o parola: ");
+                Scanner sc = new Scanner(System.in);
+                System.out.print("New Username: ");
+                usernameIntrodus = sc.nextLine();
+                System.out.print("Pwd: ");
+                pwdIntrodus = sc.nextLine();
+
                 System.out.println("Selecteaza tipul de cont pe care doresti sa il creezi: ");
                 System.out.println("1. Vanzator.");
                 System.out.println("2. Cumparator. ");
                 int tipUser = Integer.parseInt(sc.nextLine());
                 if (tipUser == 1 || tipUser == 2) {
-                    if (tipUser==1){
+                    if (tipUser == 1) {
                         buyer = false;
-                    }else buyer=true;
-                } else System.out.println("nu ai ales un numar valid");
-                start();
+                    } else buyer = true;
+                } else {
+                    System.out.println("nu ai ales un numar valid");
+                    start();
+                }
+
+
+                if (usernameIntrodus.matches("[a-zA-Z]+")) {
+                    username = usernameIntrodus;
+                } else {
+                    System.out.println("Username poate contine doar litere mari, litere mici si nu pot exista spatii. Te rugam sa incerci din nou");
+                    start();
+                }
+                if (pwdIntrodus.length() < 8 && pwdIntrodus.contains(" ")) {
+                    System.out.println("Parola trebuie sa fie mai lunga de 8 caractere si sa nu contina spatii.");
+                    start();
+                } else {
+                    pwd = pwdIntrodus;
+                }
+
+                User u = new User(username, pwd, buyer);
+
+                try {
+                    UserManagementService ums = new UserManagementService();
+                    ums.register(u);
+                    System.out.println("Felicitari! Te-ai inregistrat cu succes, " + username + "!");
+                } catch (SQLException e) {
+                    existentUser = true;
+                    System.out.println("Ne pare rau dar username " + username + " nu este disponibil. Te rugam sa incerci altul.");
+                }
             } catch (NumberFormatException e) {
                 System.out.println("Ati introdus un text invalid.");
                 start();
-            }
-
-            if (usernameIntrodus.matches("[a-zA-Z]+")) {
-                username = usernameIntrodus;
-            } else {
-                System.out.println("Username poate contine doar litere mari, litere mici si nu pot exista spatii. Te rugam sa incerci din nou");
-                start();
-            }
-            if (pwdIntrodus.length() < 8 && pwdIntrodus.contains(" ")) {
-                System.out.println("Parola trebuie sa fie mai lunga de 8 caractere si sa nu contina spatii.");
-                start();
-            } else {
-                pwd = pwdIntrodus;
-            }
-
-            User u = new User(username, pwd, buyer);
-
-            try {
-                UserManagementService ums = new UserManagementService();
-                ums.register(u);
-                System.out.println("Felicitari! Te-ai inregistrat cu succes, " + username + "!");
-            } catch (SQLException e) {
-                existentUser = true;
-                System.out.println("Ne pare rau dar username " + username + " nu este disponibil. Te rugam sa incerci altul.");
             }
 
         }
