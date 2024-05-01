@@ -1,18 +1,15 @@
 package db;
 
-import entity.Basket;
+import entity.Addresses;
+import entity.AddressesDisplay;
 import entity.BasketDisplay;
-import entity.Product;
-import entity.ProductDisplay;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DbBasketOperations {
-
-
-    public boolean insert(Basket b) {
+public class DbAddressesOperations {
+    public boolean insert(Addresses addresses) {
 
         final String URLDB = "jdbc:postgresql://localhost:5432/emag";
         final String USERNAMEDB = "postgres";
@@ -22,9 +19,9 @@ public class DbBasketOperations {
             Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
 
             // rulare sql
-            PreparedStatement pSt = conn.prepareStatement("insert into basket(iduser, idproduct) values(?, ?)");
-            pSt.setLong(1, b.getIdUser());
-            pSt.setLong(2, b.getIdProduct());
+            PreparedStatement pSt = conn.prepareStatement("insert into addresses(address, iduser) values(?, ?)");
+            pSt.setString(1, addresses.getAddress());
+            pSt.setLong(2, addresses.getIdUser());
             val = pSt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -34,9 +31,8 @@ public class DbBasketOperations {
             ok = true;
         return ok;
     }
-
-    public List<BasketDisplay> readBasketOfAUser(Long idUser) {
-        List<BasketDisplay> lp = new ArrayList<>();
+    public List<AddressesDisplay> readAddressOfAUser(Long idUser) {
+        List<AddressesDisplay> la = new ArrayList<>();
 
         try {
             final String URLDB = "jdbc:postgresql://localhost:5432/emag";
@@ -44,9 +40,8 @@ public class DbBasketOperations {
             final String PWDDB = "postgres";
             Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
 
-            String q = "select products.name as name, basket.id as id from products,basket \n" +
-                    "\t where basket.iduser=? \n" +
-                    "and basket.idproduct=products.id";
+            String q = "SELECT id,address,iduser FROM public.addresses\n" +
+                    "\twhere iduser = ?;";
             PreparedStatement pSt = conn.prepareStatement(q);
 
             pSt.setLong(1, idUser);
@@ -55,21 +50,22 @@ public class DbBasketOperations {
 
             while (rs.next()) {
 
-                String name = rs.getString("name").trim();
                 long id = rs.getLong("id");
+                String address = rs.getString("address").trim();
+                long iduser = rs.getLong("iduser");
 
-                BasketDisplay p = new BasketDisplay(id, name);
-                lp.add(p);
+                AddressesDisplay a = new AddressesDisplay(id, address, iduser);
+                la.add(a);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return lp;
+        return la;
     }
+    //deleteAddressFromDB
 
-
-    public boolean deleteBasketItem(Long idBasket) {
+    public boolean deleteAddressFromDB(Long idAddress) {
 
         final String URLDB = "jdbc:postgresql://localhost:5432/emag";
         final String USERNAMEDB = "postgres";
@@ -78,8 +74,8 @@ public class DbBasketOperations {
         try {
             Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
 
-            PreparedStatement pSt = conn.prepareStatement("delete from basket where id = ?");
-            pSt.setLong(1, idBasket);
+            PreparedStatement pSt = conn.prepareStatement("delete from addresses where id = ?");
+            pSt.setLong(1, idAddress);
 
             val = pSt.executeUpdate();
         } catch (SQLException e) {
@@ -91,28 +87,4 @@ public class DbBasketOperations {
         return ok;
 
     }
-    public boolean deleteAllBasket(Long idUser) {
-
-        final String URLDB = "jdbc:postgresql://localhost:5432/emag";
-        final String USERNAMEDB = "postgres";
-        final String PWDDB = "vvv";
-        int val = 0; // 1
-        try {
-            Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
-
-            PreparedStatement pSt = conn.prepareStatement("delete from basket where iduser = ?");
-            pSt.setLong(1, idUser);
-
-            val = pSt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        boolean ok = false;
-        if (val != 0)
-            ok = true;
-        return ok;
-
-    }
-
-
 }
