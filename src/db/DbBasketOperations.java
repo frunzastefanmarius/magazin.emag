@@ -92,6 +92,28 @@ public class DbBasketOperations {
         return ok;
 
     }
+    public boolean deleteAllBasket(Long idUser) {
+
+        final String URLDB = "jdbc:postgresql://localhost:5432/emag";
+        final String USERNAMEDB = "postgres";
+        final String PWDDB = "vvv";
+        int val = 0; // 1
+        try {
+            Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
+
+            PreparedStatement pSt = conn.prepareStatement("delete from basket where iduser = ?");
+            pSt.setLong(1, idUser);
+
+            val = pSt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        boolean ok = false;
+        if (val != 0)
+            ok = true;
+        return ok;
+
+    }
 
 
 }

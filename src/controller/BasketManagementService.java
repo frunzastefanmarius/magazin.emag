@@ -22,4 +22,10 @@ public class BasketManagementService {
         return dbBasketOperations.readBasketOfAUser(idUser);
     }
 
+    public boolean deleteAllFromBasket(Long idUser){
+        DbBasketOperations dbBasketOperations = new DbBasketOperations();
+        return dbBasketOperations.deleteAllBasket(idUser);
+
+    }
+
 }

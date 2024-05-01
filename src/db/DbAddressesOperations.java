@@ -1,0 +1,66 @@
+package db;
+
+import entity.Addresses;
+import entity.AddressesDisplay;
+import entity.BasketDisplay;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DbAddressesOperations {
+    public boolean insert(Addresses addresses) {
+
+        final String URLDB = "jdbc:postgresql://localhost:5432/emag";
+        final String USERNAMEDB = "postgres";
+        final String PWDDB = "vvv";
+        int val = 0; // 1
+        try {
+            Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
+
+            // rulare sql
+            PreparedStatement pSt = conn.prepareStatement("insert into addresses(address, iduser) values(?, ?)");
+            pSt.setString(1, addresses.getAddress());
+            pSt.setLong(2, addresses.getIdUser());
+            val = pSt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        boolean ok = false;
+        if (val != 0)
+            ok = true;
+        return ok;
+    }
+    public List<AddressesDisplay> readAddressOfAUser(Long idUser) {
+        List<AddressesDisplay> la = new ArrayList<>();
+
+        try {
+            final String URLDB = "jdbc:postgresql://localhost:5432/emag";
+            final String USERNAMEDB = "postgres";
+            final String PWDDB = "postgres";
+            Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
+
+            String q = "SELECT address,iduser FROM public.addresses\n" +
+                    "\twhere iduser = ?;";
+            PreparedStatement pSt = conn.prepareStatement(q);
+
+            pSt.setLong(1, idUser);
+
+            ResultSet rs = pSt.executeQuery();
+
+            while (rs.next()) {
+
+                String address = rs.getString("address").trim();
+                long id = rs.getLong("iduser");
+
+                AddressesDisplay a = new AddressesDisplay(id, address);
+                la.add(a);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return la;
+    }
+
+}

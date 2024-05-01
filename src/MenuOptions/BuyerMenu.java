@@ -1,13 +1,13 @@
 package MenuOptions;
 
 import MainController.emag;
-import controller.BasketManagementService;
-import controller.CategoryManagementService;
-import controller.ProductManagementService;
-import controller.UserManagementService;
+import controller.*;
+import db.DbAddressesOperations;
 import db.DbBasketOperations;
 import entity.*;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,6 +25,8 @@ public class BuyerMenu {
             System.out.println("4. Sterge un produs din cos");
             System.out.println("5. Afiseaza lista userilor");
             System.out.println("6. Afiseaza toate categoriile");
+            System.out.println("7. Adauga o adresa");
+            System.out.println("8. Afiseaza adresele mele");
             System.out.println("0. Exit");
             System.out.print("Enter your choice: ");
             userMenuOption = scanner.nextInt();
@@ -49,6 +51,21 @@ public class BuyerMenu {
                     showMenuOptions(idUser);
                 case 6:
                     showAllCategories();
+                    showMenuOptions(idUser);
+                case 7:
+                    addAddress(idUser);
+                    showMenuOptions(idUser);
+                case 8:
+                    readAddresses(idUser);
+                    showMenuOptions(idUser);
+                case 9:
+                    createAnOrder(idUser);
+                    showMenuOptions(idUser);
+                case 10:
+                    accessOrders();
+                    showMenuOptions(idUser);
+                case 11:
+                    clearAllBassket(idUser);
                     showMenuOptions(idUser);
                 case 0:
                     endProgram();
@@ -88,23 +105,33 @@ public class BuyerMenu {
         for (BasketDisplay basketOfCurrentUser : lb) {
             System.out.println(basketOfCurrentUser);
         }
-
     }
 
     public static void deleteProductFromBasket(Long idUser) {
 
         // sterg din cos
 
-        System.out.print("ce id sterg din cos:");
+        //TODO:integrat partea de sters cu BasketManagementService
+
+        System.out.print("Ce id sterg din cos:");
         Scanner sca = new Scanner(System.in);
         Long idCosDeSters = sca.nextLong();
         DbBasketOperations dbb = new DbBasketOperations();
         List<BasketDisplay> lb = dbb.readBasketOfAUser(idUser);
         dbb.deleteBasketItem(idCosDeSters);
         // cer din nou cosul de la db
-        lb = dbb.readBasketOfAUser(idUser);
         for (BasketDisplay bask : lb) {
             System.out.println(bask);
+        }
+    }
+    public static void clearAllBassket(Long idUser){
+        BasketManagementService bms = new BasketManagementService();
+        List<BasketDisplay> lb = bms.readBasket(idUser);
+        if(!lb.isEmpty()){
+
+        }else {
+            System.out.println("Nu ai produse in cos");
+            showMenuOptions(idUser);
         }
     }
 
@@ -136,6 +163,74 @@ public class BuyerMenu {
             System.out.println(c);
         }
     }
+
+    public static void addAddress(Long idUser){
+        Scanner sca = new Scanner(System.in);
+        System.out.println("Te rugam sa introduci adresa: ");
+        String address = sca.nextLine();
+        if(address!=null){
+        Addresses address1 = new Addresses(address,idUser);
+        AddressesManagementService ams = new AddressesManagementService();
+        ams.insertInAddresses(address1);
+        } else {
+            System.out.println("Acest camp nu poate fi gol.");
+            showMenuOptions(idUser);
+        }
+    }
+    public static void readAddresses(Long idUser){
+        System.out.println("adresa dumneavoastra este: ");
+        AddressesManagementService ams = new AddressesManagementService();
+        List<AddressesDisplay> la = ams.readAddresses(idUser);
+        for (AddressesDisplay a : la) {
+            System.out.println(a);
+        }
+    }
+    public static void createAnOrder(Long idUser){
+        Scanner sca = new Scanner(System.in);
+        System.out.println("Doresti sa plasezi o comanda cu produsele pe care le ai in cos?");
+        System.out.println("1. Da");
+        System.out.println("2. Nu");
+        int raspuns= sca.nextInt();
+        if (raspuns ==1 || raspuns==2){
+            if (raspuns==1){
+                BasketManagementService bms = new BasketManagementService();
+                List<BasketDisplay> lb = bms.readBasket(idUser);
+                if(!lb.isEmpty()){
+                OrdersManagementService oms = new OrdersManagementService();
+                //aici pun datele pentru a crea un obiect order pe care sa il trimit mai departe
+
+                //cat timp Lista de idBasket care corespund acestui idUser nu se termina, adauga produsele in order
+
+                // iau din lista de basket display idbasket??
+
+                    //fac o metoda in dbbasketopperations select all from baskt where iduser is ? si fac o lista cu idbasket
+
+                Timestamp creationDateTime = new Timestamp(System.currentTimeMillis());
+                boolean delivery=true;
+                boolean payment=true;
+                long idbasket = 1L;
+                Order order = new Order(creationDateTime,delivery,payment,1);
+                oms.insertInOrder(order);
+                }else {
+                    System.out.println("Nu ai produse in cos.");
+                    showMenuOptions(idUser);
+                }
+            }else {
+                showMenuOptions(idUser);
+            }
+        }else {
+            System.out.println("Nu ai introdus un numar vlaid");
+            showMenuOptions(idUser);
+        }
+
+
+
+    }
+    public static void accessOrders(){
+        System.out.println();
+
+    }
+
 
     public static void endProgram() {
         System.out.println("==========");
