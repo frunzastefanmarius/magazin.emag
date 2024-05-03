@@ -51,7 +51,7 @@ public class emag {
     }
 
     public static void register() {
-        boolean existentUser  = false;
+        boolean existentUser = false;
         System.out.println("Bine ai venit! Hai sa ne inregistram");
 
         do {
