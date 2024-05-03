@@ -26,6 +26,10 @@ public class BasketDisplay {
         this.productName = productName;
     }
 
+    public BasketDisplay(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "BasketDisplay{" +

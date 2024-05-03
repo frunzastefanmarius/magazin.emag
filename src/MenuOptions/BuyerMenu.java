@@ -71,7 +71,7 @@ public class BuyerMenu {
                     createAnOrder(idUser);
                     showMenuOptions(idUser);
                 case 11:
-                    accessOrders();
+                    accessOrders(idUser);
                     showMenuOptions(idUser);
                 case 12:
                     showAllUsers(b);
@@ -112,10 +112,12 @@ public class BuyerMenu {
     public static void readBasket(Long idUser) {
         BasketManagementService bms = new BasketManagementService();
         List<BasketDisplay> lb = bms.readBasket(idUser);
-        for (BasketDisplay basketOfCurrentUser : lb) {
-            System.out.println(basketOfCurrentUser);
-        }
         if(!lb.isEmpty()){
+            for (BasketDisplay basketOfCurrentUser : lb) {
+                System.out.println(basketOfCurrentUser);
+            }
+            showMenuOptions(idUser);
+        }else {
             System.out.println("Cosul de cumparaturi este gol");
         }
     }
@@ -196,50 +198,78 @@ public class BuyerMenu {
             System.out.println("Nu aveti adrese salvate.");
         }
     }
-    public static void createAnOrder(Long idUser){
-        Scanner sca = new Scanner(System.in);
+
+    public static void createAnOrder(Long idUser) {
         System.out.println("Doresti sa plasezi o comanda cu produsele pe care le ai in cos?");
         System.out.println("1. Da");
         System.out.println("2. Nu");
-        int raspuns= sca.nextInt();
-        if (raspuns ==1 || raspuns==2){
-            if (raspuns==1){
+        Scanner sca = new Scanner(System.in);
+
+        int raspuns = sca.nextInt();
+        if (raspuns == 1 || raspuns == 2) {
+            if (raspuns == 1) {
+                boolean b = true;
+                ProductManagementService pms = new ProductManagementService();
                 BasketManagementService bms = new BasketManagementService();
+                List<ProductDisplay> lpid = pms.idProductForOrder(idUser);
+                for(ProductDisplay bam : lpid){
+                    System.out.println(bam);
+                }
                 List<BasketDisplay> lb = bms.readBasket(idUser);
-                if(!lb.isEmpty()){
-                OrdersManagementService oms = new OrdersManagementService();
-                //aici pun datele pentru a crea un obiect order pe care sa il trimit mai departe
 
-                //cat timp Lista de idBasket care corespund acestui idUser nu se termina, adauga produsele in order
+                if (!lb.isEmpty()) {
 
-                // iau din lista de basket display idbasket??
+                    while (!lb.isEmpty()) {
+                        try{
+                        OrdersManagementService oms = new OrdersManagementService();
 
-                    //fac o metoda in dbbasketopperations select all from baskt where iduser is ? si fac o lista cu idbasket
+                        //aici pun datele pentru a crea un obiect order pe care sa il trimit mai departe
 
-                Timestamp creationDateTime = new Timestamp(System.currentTimeMillis());
-                boolean delivery=true;
-                boolean payment=true;
-                long idbasket = 1L;
-                Order order = new Order(creationDateTime,delivery,payment,1);
-                oms.insertInOrder(order);
-                }else {
+                        Timestamp creationDateTime = new Timestamp(System.currentTimeMillis());
+                        boolean delivery = true;
+                        boolean payment = true;
+                        Long idUserForOrder = idUser;
+
+                        ProductDisplay primulElementDinListaDeIdProducts = lpid.remove(0);
+                        Long idProductForOrder = primulElementDinListaDeIdProducts.getId();
+
+                        Order order = new Order(creationDateTime, delivery, payment, idUserForOrder, idProductForOrder);
+                        oms.insertInOrder(order);
+                        } catch (NumberFormatException e) {
+                            System.out.println("ACUMA CRAPA AICI?????");
+                        }
+                    }
+
+                    //aici facem o metoda care trimite la un fisier text toate datele din metoda elegant.
+
+                    clearAllBassket(idUser);
+                    System.out.println("Comanda a fost plasata cu succes!");
+                    accessOrders(idUser);
+                } else {
                     System.out.println("Nu ai produse in cos.");
                     showMenuOptions(idUser);
                 }
-            }else {
+            } else {
                 showMenuOptions(idUser);
             }
-        }else {
+        }
+        else {
             System.out.println("Nu ai introdus un numar vlaid");
             showMenuOptions(idUser);
         }
-
-
-
     }
-    public static void accessOrders(){
-        System.out.println("Aceasta este lista ta de comenzi: ");
 
+    public static void accessOrders(Long idUser){
+        OrdersManagementService oms = new OrdersManagementService();
+        List<OrderDisplay> lo = oms.showOrder(idUser);
+        if(!lo.isEmpty()){
+            System.out.println("comenzile dumneavoastra sunt sunt: ");
+            for (OrderDisplay o : lo) {
+                System.out.println(o);
+            }
+        }else {
+            System.out.println("Nu ai o comanda plasata.");
+        }
 
     }
     public static void showAllUsers(boolean b) {

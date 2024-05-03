@@ -137,4 +137,34 @@ public class DbUsersOperations {
 
     }
 
+    public List<User> IdUserForOrder(boolean b) {
+        List<User> lu = new ArrayList<>();
+
+        try {
+
+            final String URLDB = "jdbc:postgresql://localhost:5432/emag";
+            final String USERNAMEDB = "postgres";
+            final String PWDDB = "postgres";
+            Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
+
+            String q = "SELECT iduser FROM basket ORDER BY iduser ASC";
+
+            PreparedStatement pSt = conn.prepareStatement(q);
+
+            ResultSet rs = pSt.executeQuery();
+
+            while (rs.next()) {
+
+                long id = rs.getLong("id");
+
+                User u = new User(id);
+                u.setId(id);
+                lu.add(u);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lu;
+    }
+
 }

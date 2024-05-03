@@ -8,32 +8,22 @@ public class Order {
     private Timestamp creationDateTime;
     private boolean delivery;
     private boolean payment;
-    private long idBasket;
+    //private long idBasket;
     private long idUserFromBasket;
     private long idProductFromBasket;
 
-    public Order(long id, Timestamp creationDateTime, boolean delivery, boolean payment, long idBasket) {
-        this.id = id;
+    public Order(Timestamp creationDateTime, boolean delivery, boolean payment) {
         this.creationDateTime = creationDateTime;
         this.delivery = delivery;
         this.payment = payment;
-        this.idBasket = idBasket;
     }
 
-    public Order(Timestamp creationDateTime, boolean delivery, boolean payment, long idBasket, long idUserFromBasket, long idProductFromBasket) {
+    public Order(Timestamp creationDateTime, boolean delivery, boolean payment, long idUserFromBasket, long idProductFromBasket) {
         this.creationDateTime = creationDateTime;
         this.delivery = delivery;
         this.payment = payment;
-        this.idBasket = idBasket;
         this.idUserFromBasket = idUserFromBasket;
         this.idProductFromBasket = idProductFromBasket;
-    }
-
-    public Order(Timestamp creationDateTime, boolean delivery, boolean payment, long idBasket) {
-        this.creationDateTime = creationDateTime;
-        this.delivery = delivery;
-        this.payment = payment;
-        this.idBasket = idBasket;
     }
 
     public long getId() {
@@ -68,12 +58,22 @@ public class Order {
         this.payment = payment;
     }
 
-    public long getIdBasket() {
-        return idBasket;
+
+
+    public long getIdUserFromBasket() {
+        return idUserFromBasket;
     }
 
-    public void setIdBasket(long idBasket) {
-        this.idBasket = idBasket;
+    public void setIdUserFromBasket(long idUserFromBasket) {
+        this.idUserFromBasket = idUserFromBasket;
+    }
+
+    public long getIdProductFromBasket() {
+        return idProductFromBasket;
+    }
+
+    public void setIdProductFromBasket(long idProductFromBasket) {
+        this.idProductFromBasket = idProductFromBasket;
     }
 
     @Override
@@ -83,7 +83,6 @@ public class Order {
                 ", creationDateTime=" + creationDateTime +
                 ", delivery=" + delivery +
                 ", payment=" + payment +
-                ", idBasket=" + idBasket +
                 '}';
     }
 }

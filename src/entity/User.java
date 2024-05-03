@@ -76,4 +76,8 @@ public class User {
         this.password = password;
         this.isBuyer = isBuyer;
     }
+
+    public User(long id) {
+        this.id = id;
+    }
 }

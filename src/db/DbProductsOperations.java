@@ -75,6 +75,38 @@ public class DbProductsOperations {
 
         return lp;
     }
+    public List<ProductDisplay> readIdForOrder(Long idUser) {
+        List<ProductDisplay> lpid = new ArrayList<>();
+
+        try {
+            final String URLDB = "jdbc:postgresql://localhost:5432/emag";
+            final String USERNAMEDB = "postgres";
+            final String PWDDB = "postgres";
+            Connection conn = DriverManager.getConnection(URLDB, USERNAMEDB, PWDDB);
+
+            String q = "SELECT basket.idproduct " +
+                    "FROM basket " +
+                    "WHERE iduser = ?";
+            PreparedStatement pSt = conn.prepareStatement(q);
+
+            pSt.setLong(1, idUser);
+
+            ResultSet rs = pSt.executeQuery();//executa queriul iar cat timp am rezultate retunreaza true
+
+
+            while (rs.next()) {//rs este ce imi returneaza baza de date
+
+                long idproduct = rs.getLong("idproduct");
+
+                ProductDisplay pId = new ProductDisplay(idproduct);//aici creaza un obiect de tipul ce vreau eu, si dupa il adauga in lista pe care o returneaza metoda.
+                lpid.add(pId);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lpid;
+    }
 
 
 

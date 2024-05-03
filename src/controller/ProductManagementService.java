@@ -20,4 +20,9 @@ public class ProductManagementService {
         DbProductsOperations dbProductsOperations = new DbProductsOperations();
         return dbProductsOperations.insert(p);
     }
+
+    public List<ProductDisplay> idProductForOrder(Long idUser) {
+        DbProductsOperations db = new DbProductsOperations();
+        return db.readIdForOrder(idUser);
+    }
 }

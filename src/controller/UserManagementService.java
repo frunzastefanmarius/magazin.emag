@@ -26,5 +26,10 @@ public class UserManagementService {
         boolean buyerOrSeller = db.userType(idUser);
         return buyerOrSeller;
     }
+    public List<User> IdUserForOrder(boolean b){
+        DbUsersOperations db = new DbUsersOperations();
+        List<User> lu = db.IdUserForOrder(b);
+        return lu;
+    }
 
 }

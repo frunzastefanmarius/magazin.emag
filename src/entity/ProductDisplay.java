@@ -3,12 +3,20 @@ package entity;
 public class ProductDisplay {
 
     private String name;
-
     private long id;
     private String description;
     private String price;
     private String vendorName;
     private String categoryName;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -56,6 +64,10 @@ public class ProductDisplay {
         this.price = price;
         this.vendorName = vendorName;
         this.categoryName = categoryName;
+    }
+
+    public ProductDisplay(long id) {
+        this.id = id;
     }
 
     @Override

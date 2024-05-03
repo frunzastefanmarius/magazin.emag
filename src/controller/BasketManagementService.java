@@ -2,10 +2,7 @@ package controller;
 
 import db.DbBasketOperations;
 import db.DbProductsOperations;
-import entity.Basket;
-import entity.BasketDisplay;
-import entity.Product;
-import entity.User;
+import entity.*;
 
 import java.util.List;
 
@@ -31,11 +28,9 @@ public class BasketManagementService {
         return dbBasketOperations.deleteAllBasket(idUser);
 
     }
-
-    public boolean deleteAllFromBasket(Long idUser){
-        DbBasketOperations dbBasketOperations = new DbBasketOperations();
-        return dbBasketOperations.deleteAllBasket(idUser);
-
+    public List<BasketDisplay2> listaIdBasketFromBasket(Long idUser){
+        DbBasketOperations dbb = new DbBasketOperations();
+        return dbb.listaDeIdBasketDinBasket(idUser);
     }
 
 }
