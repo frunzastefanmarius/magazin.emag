@@ -212,6 +212,7 @@ public class BuyerMenu {
                 ProductManagementService pms = new ProductManagementService();
                 BasketManagementService bms = new BasketManagementService();
                 List<ProductDisplay> lpid = pms.idProductForOrder(idUser);
+                OrdersManagementService oms = new OrdersManagementService();
                 for(ProductDisplay bam : lpid){
                     System.out.println(bam);
                 }
@@ -219,9 +220,7 @@ public class BuyerMenu {
 
                 if (!lb.isEmpty()) {
 
-                    while (!lb.isEmpty()) {
-                        try{
-                        OrdersManagementService oms = new OrdersManagementService();
+                    for (BasketDisplay basket :lb) {
 
                         //aici pun datele pentru a crea un obiect order pe care sa il trimit mai departe
 
@@ -230,20 +229,22 @@ public class BuyerMenu {
                         boolean payment = true;
                         Long idUserForOrder = idUser;
 
-                        ProductDisplay primulElementDinListaDeIdProducts = lpid.remove(0);
-                        Long idProductForOrder = primulElementDinListaDeIdProducts.getId();
 
-                        Order order = new Order(creationDateTime, delivery, payment, idUserForOrder, idProductForOrder);
-                        oms.insertInOrder(order);
-                        } catch (NumberFormatException e) {
-                            System.out.println("ACUMA CRAPA AICI?????");
+                        if(!lpid.isEmpty()) {
+                            ProductDisplay primulElementDinListaDeIdProducts = lpid.remove(0);
+                            Long idProductForOrder = primulElementDinListaDeIdProducts.getId();
+
+                            Order order = new Order(creationDateTime, delivery, payment, idUserForOrder, idProductForOrder);
+                            oms.insertInOrder(order);
                         }
+                        System.out.println("dedebuug");
                     }
+                    System.out.println("de debuug 2");
 
                     //aici facem o metoda care trimite la un fisier text toate datele din metoda elegant.
 
-                    clearAllBassket(idUser);
                     System.out.println("Comanda a fost plasata cu succes!");
+                    bms.deleteAllFromBasket(idUser);
                     accessOrders(idUser);
                 } else {
                     System.out.println("Nu ai produse in cos.");

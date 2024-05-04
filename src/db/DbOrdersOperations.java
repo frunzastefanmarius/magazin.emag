@@ -69,7 +69,6 @@ public class DbOrdersOperations {
 
             while (rs.next()) {
 
-
                 long id = rs.getLong("id");
                 Timestamp creationTime = rs.getTimestamp("createdtime");
                 boolean delivery = rs.getBoolean("delivery");

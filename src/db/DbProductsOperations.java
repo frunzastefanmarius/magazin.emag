@@ -91,14 +91,15 @@ public class DbProductsOperations {
 
             pSt.setLong(1, idUser);
 
-            ResultSet rs = pSt.executeQuery();//executa queriul iar cat timp am rezultate retunreaza true
+            ResultSet rs = pSt.executeQuery();
 
+            //executa queriul iar cat timp am rezultate retunreaza true
 
             while (rs.next()) {//rs este ce imi returneaza baza de date
 
-                long idproduct = rs.getLong("idproduct");
+                Long id = rs.getLong("idproduct");
 
-                ProductDisplay pId = new ProductDisplay(idproduct);//aici creaza un obiect de tipul ce vreau eu, si dupa il adauga in lista pe care o returneaza metoda.
+                ProductDisplay pId = new ProductDisplay(id);//aici creaza un obiect de tipul ce vreau eu, si dupa il adauga in lista pe care o returneaza metoda.
                 lpid.add(pId);
             }
         } catch (SQLException e) {

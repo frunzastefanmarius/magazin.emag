@@ -70,6 +70,9 @@ public class ProductDisplay {
         this.id = id;
     }
 
+    public ProductDisplay() {
+    }
+
     @Override
     public String toString() {
         return "ProductDisplay{" +
