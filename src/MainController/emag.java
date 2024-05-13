@@ -106,6 +106,7 @@ public class emag {
                 } catch (SQLException e) {
                     existentUser = true;
                     System.out.println("Ne pare rau dar username " + username + " nu este disponibil. Te rugam sa incerci altul.");
+                    start();
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Ati introdus un text invalid.");

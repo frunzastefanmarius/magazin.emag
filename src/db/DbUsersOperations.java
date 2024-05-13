@@ -98,7 +98,7 @@ public class DbUsersOperations {
             //daca intra pe while inseamna ca a gasit ceva, daca nu gaseste si ID ramane null, nu intra pe while
             while (rs.next()) {
                 idUser = rs.getLong("id");//si pune in idUser valoare care este in coloana id din pgadmin
-                System.out.println("(a intrat in while din DbUsersOperations si s a logat)");
+                System.out.println("DE DEBUG: a intrat in while din DbUsersOperations si s a logat");
             }//daca intra pe aici macar o data inseamna ca este valorizat
         } catch (SQLException e) {
             e.printStackTrace();

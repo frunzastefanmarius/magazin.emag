@@ -101,6 +101,11 @@ public class BuyerMenu {
         System.out.print("ce id pui in cos:");
         long idprod = sc.nextLong();
 
+
+
+        //creez o lista cu id de produse si daca idprod introdus este egal cu un element din lista,
+        //sa se exectute daca nu sa spuna ca nu e si apeleze buyerMenu
+
         Basket b = new Basket(idUser, idprod);
 
         BasketManagementService bms = new BasketManagementService();
@@ -124,16 +129,20 @@ public class BuyerMenu {
 
     public static void deleteProductFromBasket(Long idUser) {
         readBasket(idUser);
-        System.out.print("Ce id sterg din cos:");
-        Scanner sca = new Scanner(System.in);
-        Long idCosDeSters = sca.nextLong();
         BasketManagementService bms = new BasketManagementService();
-        bms.deleteProductFromBasket(idCosDeSters);
-        System.out.println("Produsul a fost sters. Cosul dumneavoastra este: ");
-        //aici afisez din nou cosul
         List<BasketDisplay> lb = bms.readBasket(idUser);
-        for (BasketDisplay basketOfCurrentUser : lb) {
-            System.out.println(basketOfCurrentUser);
+        if (!lb.isEmpty()) {
+            System.out.print("Ce id sterg din cos:");
+            Scanner sca = new Scanner(System.in);
+            Long idCosDeSters = sca.nextLong();
+            bms.deleteProductFromBasket(idCosDeSters);
+            System.out.println("Produsul a fost sters. Cosul dumneavoastra este: ");
+            //aici afisez din nou cosul
+            for (BasketDisplay basketOfCurrentUser : lb) {
+                System.out.println(basketOfCurrentUser);
+            }
+        } else {
+            System.out.println("Nu aveti produse in cos");
         }
     }
     public static void clearAllBassket(Long idUser){
