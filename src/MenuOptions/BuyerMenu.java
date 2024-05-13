@@ -3,9 +3,11 @@ package MenuOptions;
 import MainController.emag;
 import controller.*;
 import db.DbBasketOperations;
+import db.DbProductsOperations;
 import entity.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -100,12 +102,29 @@ public class BuyerMenu {
         Scanner sc = new Scanner(System.in);
         System.out.print("ce id pui in cos:");
         long idprod = sc.nextLong();
+        ProductManagementService pms = new ProductManagementService();
+        List<ProductDisplay> listAllProductObj = pms.idProductForAddInBasket();
+        List<Long> listAllProductLong = new ArrayList<>();
+
+        for (ProductDisplay obj : listAllProductObj){
+            listAllProductLong.add((long) obj.getId());
+        }
+
+        if(listAllProductLong.contains(idprod)){
+
+
+        //creez o lista cu id de produse si daca idprod introdus este egal cu un element din lista,
+        //sa se exectute daca nu sa spuna ca nu e si apeleze buyerMenu
 
         Basket b = new Basket(idUser, idprod);
 
         BasketManagementService bms = new BasketManagementService();
         bms.insertInBasket(b);
         readBasket(idUser);
+        }else {
+            System.out.println("Nu ati introdus un id de produs.");
+            showMenuOptions(idUser);
+        }
 
     }
 
@@ -124,16 +143,20 @@ public class BuyerMenu {
 
     public static void deleteProductFromBasket(Long idUser) {
         readBasket(idUser);
-        System.out.print("Ce id sterg din cos:");
-        Scanner sca = new Scanner(System.in);
-        Long idCosDeSters = sca.nextLong();
         BasketManagementService bms = new BasketManagementService();
-        bms.deleteProductFromBasket(idCosDeSters);
-        System.out.println("Produsul a fost sters. Cosul dumneavoastra este: ");
-        //aici afisez din nou cosul
         List<BasketDisplay> lb = bms.readBasket(idUser);
-        for (BasketDisplay basketOfCurrentUser : lb) {
-            System.out.println(basketOfCurrentUser);
+        if (!lb.isEmpty()) {
+            System.out.print("Ce id sterg din cos:");
+            Scanner sca = new Scanner(System.in);
+            Long idCosDeSters = sca.nextLong();
+            bms.deleteProductFromBasket(idCosDeSters);
+            System.out.println("Produsul a fost sters. Cosul dumneavoastra este: ");
+            //aici afisez din nou cosul
+            for (BasketDisplay basketOfCurrentUser : lb) {
+                System.out.println(basketOfCurrentUser);
+            }
+        } else {
+            System.out.println("Nu aveti produse in cos");
         }
     }
     public static void clearAllBassket(Long idUser){
@@ -213,20 +236,44 @@ public class BuyerMenu {
                 BasketManagementService bms = new BasketManagementService();
                 List<ProductDisplay> lpid = pms.idProductForOrder(idUser);
                 OrdersManagementService oms = new OrdersManagementService();
-                for(ProductDisplay bam : lpid){
-                    System.out.println(bam);
-                }
                 List<BasketDisplay> lb = bms.readBasket(idUser);
 
                 if (!lb.isEmpty()) {
+                    boolean delivery = true;
+
+                    System.out.println("Doriti livrare?");
+                    System.out.println("1. Da");
+                    System.out.println("2. Nu");
+                    int var = sca.nextInt();
+                    if (var == 1 || var == 2){
+                        if (var == 2){
+                            delivery = false;
+                        }
+                    }else {
+                        System.out.println("Nu ati ales un numar corect");
+                        showMenuOptions(idUser);
+                    }
+                    boolean payment = true;
+                    System.out.println("Plata cu cardul?");
+                    System.out.println("1. Da");
+                    System.out.println("2. Nu");
+                    int variabila = sca.nextInt();
+                    if (variabila == 1 || variabila == 2){
+                        if (variabila == 2){
+                            payment = false;
+                        }
+                    }else {
+                        System.out.println("Nu ati ales un numar corect");
+                        showMenuOptions(idUser);
+                    }
 
                     for (BasketDisplay basket :lb) {
 
                         //aici pun datele pentru a crea un obiect order pe care sa il trimit mai departe
 
                         Timestamp creationDateTime = new Timestamp(System.currentTimeMillis());
-                        boolean delivery = true;
-                        boolean payment = true;
+
+
                         Long idUserForOrder = idUser;
 
 

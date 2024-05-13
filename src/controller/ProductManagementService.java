@@ -10,19 +10,22 @@ import java.awt.*;
 import java.util.List;
 
 public class ProductManagementService {
+    DbProductsOperations db = new DbProductsOperations();
+
 
     public List<ProductDisplay> showAllProducts() {
-        DbProductsOperations db = new DbProductsOperations();
         return db.readAllProducts();
     }
 
     public boolean insert(Product p) {
-        DbProductsOperations dbProductsOperations = new DbProductsOperations();
-        return dbProductsOperations.insert(p);
+        return db.insert(p);
     }
 
     public List<ProductDisplay> idProductForOrder(Long idUser) {
-        DbProductsOperations db = new DbProductsOperations();
         return db.readIdForOrder(idUser);
+    }
+
+    public  List<ProductDisplay> idProductForAddInBasket(){
+        return db.readAllIdProduct();
     }
 }

@@ -86,4 +86,6 @@ public class Product {
         this.iduser = iduser;
         this.idCategory = idCategory;
     }
+
+
 }
