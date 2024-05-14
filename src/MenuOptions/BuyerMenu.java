@@ -116,6 +116,11 @@ public class BuyerMenu {
         //creez o lista cu id de produse si daca idprod introdus este egal cu un element din lista,
         //sa se exectute daca nu sa spuna ca nu e si apeleze buyerMenu
 
+
+
+        //creez o lista cu id de produse si daca idprod introdus este egal cu un element din lista,
+        //sa se exectute daca nu sa spuna ca nu e si apeleze buyerMenu
+
         Basket b = new Basket(idUser, idprod);
 
         BasketManagementService bms = new BasketManagementService();
