@@ -147,19 +147,17 @@ public class BuyerMenu {
     }
 
     public static void deleteProductFromBasket(Long idUser) {
-        readBasket(idUser);
+        //readBasket(idUser);
         BasketManagementService bms = new BasketManagementService();
         List<BasketDisplay> lb = bms.readBasket(idUser);
         if (!lb.isEmpty()) {
             System.out.print("Ce id sterg din cos:");
             Scanner sca = new Scanner(System.in);
             Long idCosDeSters = sca.nextLong();
+
             bms.deleteProductFromBasket(idCosDeSters);
             System.out.println("Produsul a fost sters. Cosul dumneavoastra este: ");
-            //aici afisez din nou cosul
-            for (BasketDisplay basketOfCurrentUser : lb) {
-                System.out.println(basketOfCurrentUser);
-            }
+
         } else {
             System.out.println("Nu aveti produse in cos");
         }
