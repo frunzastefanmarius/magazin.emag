@@ -276,7 +276,6 @@ public class BuyerMenu {
 
                         Long idUserForOrder = idUser;
 
-
                         if(!lpid.isEmpty()) {
                             ProductDisplay primulElementDinListaDeIdProducts = lpid.remove(0);
                             Long idProductForOrder = primulElementDinListaDeIdProducts.getId();
